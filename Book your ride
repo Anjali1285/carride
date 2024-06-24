@@ -1,0 +1,66 @@
+import java.util.Scanner;
+
+// Custom Exception for Bicycle
+class BicycleDistanceException extends Exception {
+    public BicycleDistanceException(String message) {
+        super(message);
+    }
+}
+
+// Custom Exception for Bike
+class BikeDistanceException extends Exception {
+    public BikeDistanceException(String message) {
+        super(message);
+    }
+}
+
+public class TransportBooking {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.print("Enter distance in km: ");
+            double distance = scanner.nextDouble();
+
+            System.out.print("Enter time in hours: ");
+            double time = scanner.nextDouble();
+
+            System.out.print("Enter vehicle type (car/bike/bicycle): ");
+            String vehicleType = scanner.next().toLowerCase();
+
+            double bill = calculateBill(distance, time, vehicleType);
+            System.out.println("The total bill is: Rs " + bill);
+        } catch (BicycleDistanceException | BikeDistanceException | IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            scanner.close();
+        }
+    }
+
+    public static double calculateBill(double distance, double time, String vehicleType) 
+            throws BicycleDistanceException, BikeDistanceException {
+        double ratePerHour;
+
+        switch (vehicleType) {
+            case "bicycle":
+                if (distance > 20) {
+                    throw new BicycleDistanceException("Distance cannot be more than 20 km for a bicycle.");
+                }
+                ratePerHour = 50;
+                break;
+            case "bike":
+                if (distance > 100) {
+                    throw new BikeDistanceException("Distance cannot be more than 100 km for a bike.");
+                }
+                ratePerHour = 100;
+                break;
+            case "car":
+                ratePerHour = 300;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid vehicle type.");
+        }
+
+        return ratePerHour * time;
+    }
+}
